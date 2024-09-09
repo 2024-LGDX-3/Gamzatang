@@ -1,10 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThinQ Page</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* 전체 화면 높이를 차지하도록 설정 */
+            background-image: url('../static/img/ThinQ.png'); /* PNG 이미지가 배경으로 설정됩니다. */
+            background-size: contain; /* 이미지 크기를 비율에 맞춰 조정 */
+            background-position: center; /* 배경 이미지의 위치를 가운데로 설정 */
+            background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+        }
+
+        #showWebOS, #newButton {
+            position: absolute;
+            padding: 10px 20px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            background-color: #EAF1F2;
+        }
+
+        #showWebOS {
+            bottom: 45px; /* 화면 하단에서 45px 위로 이동 */
+            left: 50%; /* 수평 중앙에 맞추기 위해 왼쪽 경계선을 화면의 50%로 설정 */
+            transform: translateX(-50%); /* 버튼의 너비에 따라 완벽히 중앙에 오도록 조정 */
+        }
+
+        #newButton {
+            top: 20px; /* 화면 상단에서 20px 아래로 이동 */
+            right: 800px; /* 화면 오른쪽에서 20px 왼쪽으로 이동 */
+            transform: none;
+            background-color: red; /* 새로운 버튼의 위치 조정 시 변형 없음 */
+        }
+
+        #showWebOS:hover, #newButton:hover {
+            background-color: #ddd; /* 마우스 오버 시 배경색 변경 */
+        }
+    </style>
 </head>
 <body>
-$END$
+
+<button id="showWebOS">LinQ</button>
+
+<script>
+    document.getElementById('showWebOS').addEventListener('click', function() {
+        // 배경 이미지를 LinQ.png로 변경
+        document.body.style.backgroundImage = "url('/CC/png/LinQ.png')";
+
+        // 기존 버튼 숨기기
+        document.getElementById('showWebOS').style.display = 'none';
+
+        // 새로운 버튼 생성
+        var newButton = document.createElement('button');
+        newButton.id = 'newButton';
+        newButton.innerText = '사진 업로드';
+        document.body.appendChild(newButton);
+
+        newButton.addEventListener('click', function() {
+            document.body.style.backgroundImage= "url('/CC/png/사진.png')"
+
+            document.getElementById('newButton').style.display = 'none';
+        });
+    });
+</script>
 </body>
 </html>
