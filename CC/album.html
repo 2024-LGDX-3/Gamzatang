@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>앨범형 사진 선택</title>
+   <link rel="stylesheet" href="album.css">
+</head>
+<body>
+    <div class="album">
+        <div class="frame" onclick="toggleSelect(this)">
+            <img src="/cc/png/진호.jpeg" alt="Image 1">
+            <div class="checkmark">✔</div>
+        </div>
+        <div class="frame" onclick="toggleSelect(this)">
+            <img src="/cc/png/영은.jpeg" alt="Image 2">
+            <div class="checkmark">✔</div>
+        </div>
+        <div class="frame" onclick="toggleSelect(this)">
+            <img src="/cc/png/진완.jpeg" alt="Image 3">
+            <div class="checkmark">✔</div>
+        </div>
+        <div class="frame" onclick="toggleSelect(this)">
+            <img src="https://via.placeholder.com/200" alt="Image 4">
+            <div class="checkmark">✔</div>
+        </div>
+        <div class="frame" onclick="toggleSelect(this)">
+            <img src="https://via.placeholder.com/200" alt="Image 5">
+            <div class="checkmark">✔</div>
+        </div>
+        <div class="frame" onclick="toggleSelect(this)">
+            <img src="https://via.placeholder.com/200" alt="Image 6">
+            <div class="checkmark">✔</div>
+        </div>
+    </div>
+
+    <button class="upload-button" onclick="uploadSelection()">업로드</button>
+
+    <script src="album.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 전체 화면 높이를 차지하도록 설정 */
+    background-image: url('/cc/png/앨범.png'); /* PNG 이미지가 배경으로 설정됩니다. */
+    background-size: contain; /* 이미지 크기를 비율에 맞춰 조정 */
+    background-position: center; /* 배경 이미지의 위치를 가운데로 설정 */
+    background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+}
+
+.album {
+    display: grid;
+    grid-template-columns: repeat(2, 45%); /* 2개의 열, 열 너비를 줄여서 여백을 확보 */
+    gap: 5%;
+    margin-top: 5%; /* 아래쪽으로 살짝 이동 */
+    max-width: 90%; /* 화면 너비의 90%로 설정 */
+    max-height: 70vh; /* 화면 높이의 70%로 설정 */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 생성 */
+}
+
+.frame {
+    position: relative;
+    left: 5.3%;
+    width: 100%; /* 프레임의 너비 */
+    height: 200px; /* 프레임의 높이 조정 */
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    overflow: hidden; /* 프레임을 넘은 이미지 숨기기 */
+}
+
+.frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 프레임을 넘지 않도록 조절 */
+}
+
+.checkmark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: #2196F3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.frame.selected .checkmark {
+    opacity: 1;
+}
+
+.upload-button {
+    padding: 0.5vw 1vw; /* 버튼 크기를 %로 설정 */
+    background-color: #6ac5bb;
+    height: 5%;
+    width: 20%;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    bottom: 7.5%; /* 버튼을 조금 위로 올림 */
+    left: 50%;
+    transform: translateX(-50%); /* 버튼을 중앙 정렬 */
+}
+
+.upload-button:hover {
+    background-color: #45a049;
+}
