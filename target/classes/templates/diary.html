@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>앨범</title>
+    <link rel="stylesheet" href="css/diary.css"> <!-- 경로 확인 필요 -->
+</head>
+
+<body>
+    <div class="album" id="album"></div>
+    <form action="standby">
+        <button type="button" class="upload-button" onclick="submitSelectedImages()">추억 생성하기</button>
+    </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const albumContainer = document.getElementById('album');
+
+            // 이미지 파일명 및 URL 설정
+            let i = 1; // 시작 번호
+            const loadImages = () => {
+                const imageUrl = `diary/${i}.jpg`; // 이미지 URL 설정
+
+                // 이미지가 존재하는지 확인하기 위해 fetch를 사용
+                fetch(imageUrl)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Image not found");
+
+                        // 이미지 요소 생성
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imageUrl;
+                        imgElement.alt = `Album Image ${i}`;
+
+                        // 프레임 요소 생성
+                        const frameElement = document.createElement('div');
+                        frameElement.className = 'frame';
+                        frameElement.onclick = function() {
+                            this.classList.toggle('selected');
+                        };
+
+                        // 체크마크 요소 생성
+                        const checkmarkElement = document.createElement('div');
+                        checkmarkElement.className = 'checkmark';
+                        checkmarkElement.textContent = '✔';
+
+                        // 요소들 추가
+                        frameElement.appendChild(imgElement);
+                        frameElement.appendChild(checkmarkElement);
+                        albumContainer.appendChild(frameElement);
+
+                        i++; // 다음 이미지로
+                        loadImages(); // 재귀 호출로 다음 이미지 로드
+                    })
+                    .catch(error => {
+                        console.log("No more images to load.");
+                    });
+            };
+
+            loadImages(); // 이미지 로드 시작
+        });
+
+        function submitSelectedImages() {
+            const selectedImages = [];
+            document.querySelectorAll('.frame.selected img').forEach(img => {
+                selectedImages.push(img.src);
+            });
+            localStorage.setItem('selectedImages', JSON.stringify(selectedImages));
+            window.location.href = 'standby'; // 페이지 이동
+        }
+    </script>
+</body>
+
+</html>
