@@ -49,3 +49,71 @@ body {
     font-size: 12px; /* 글자 크기 설정 */
     margin-left: -200px;
 }
+
+#upload {
+    position: absolute;
+    padding: 0.5% 2%;
+    font-size: 1.5vh;
+    color: white;
+    background-color: #A50034; /* 버튼의 배경색 설정 */
+    border: none;
+    border-radius: 2vh; /* 모서리를 둥글게 설정 */
+    cursor: pointer;
+    bottom: 44.77%; /* 화면 하단에서 46px 위로 이동 */
+    left: 49.5%; /* 수평 중앙에 맞추기 위해 왼쪽 경계선을 화면의 50%로 설정 */
+    transform: translateX(-50%); /* 버튼의 너비에 따라 완벽히 중앙에 오도록 조정 */
+    text-align: center; /* 텍스트를 중앙에 배치 */
+    transition: background-color 0.3s ease; /* 배경색 변화에 부드러운 전환 효과 추가 */
+}
+
+#upload:hover {
+    background-color: #FD312E; /* 마우스 오버 시 버튼의 배경색 변경 */
+}
+
+/* 큰 구역 스타일 */
+#image-container {
+    position: absolute; /* 또는 fixed */
+    top: 74%; /* 상단에서 50%의 위치 */
+    left: 50.02%; /* 좌측에서 50%의 위치 */
+    transform: translate(-50%, -50%); /* 정확한 중앙 위치 보정 */
+    width: 34.31vh;
+    height: 17vh;
+    background-color: #F2F5FF; /* 배경색을 살짝 투명하게 설정 */
+    display: flex;
+    flex-wrap: wrap; /* 이미지가 여러 줄로 배치되도록 설정 */
+    justify-content: flex-start;
+    align-items: flex-start; 
+    margin-top: 0.5vh; /* 위쪽 여백 추가 */
+    margin-bottom: 0.5vh;
+    overflow: hidden;
+    
+}
+
+.image-group {
+    width: 207%; /* 그룹이 컨테이너 전체 너비를 차지하도록 설정 */
+    display: flex;
+    justify-content: center; /* 이미지들을 중앙에 배치 */
+    margin-bottom: 1vh; /* 그룹 간의 간격 */
+}
+
+/* 이미지 스타일 */
+.image-item {
+    width: 20vh; /* 각 이미지의 너비 */
+    height: 8vh; /* 각 이미지의 높이 */
+    margin: 0.4vh 0.4vh;
+    border-radius: 3vh;
+    position: relative;
+    object-fit: cover; /* 이미지가 영역을 채우도록 설정 */
+    overflow: hidden;
+    animation: slide 15s linear infinite; /* 애니메이션 추가 */
+}
+
+@keyframes slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-320%); }
+}
+
+.image-group:nth-child(2) {
+    position: relative; /* 위치를 상대적으로 설정 */
+    left: 4vh; /* 왼쪽으로 4vh 이동 */
+}
