@@ -8,7 +8,7 @@ body {
 }
 
 #thinQ {
-    max-width: 100%; /* 화면 크기에 맞춰 최대 크기 설정 */
+    max-width: 50%; /* 화면 크기에 맞춰 최대 크기 설정 */
     height: auto; /* 비율 유지 */
     width: auto; /* 원하는 고정 크기 설정 */
 }
