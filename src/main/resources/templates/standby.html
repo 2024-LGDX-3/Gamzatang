@@ -25,7 +25,7 @@
         const sliderFrame = document.getElementById('slider-frame');
 
         // 서버에서 선택된 이미지와 텍스트 데이터 가져오기
-        fetch('/getImageTextData')
+        fetch('/demo/getImageTextData')
             .then(response => response.json())
             .then(items => {
                 if (items.length === 0) {

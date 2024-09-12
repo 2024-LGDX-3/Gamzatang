@@ -64,6 +64,11 @@ public class MyController {
     public String oshomePage() {
         return "osHome";  // osHome.html로 이동
     }
+    @GetMapping("/getImageTextData")
+    @ResponseBody
+    public List<ImageTextData> getImageTextData() {
+        return repository.findAll();  // DB에서 저장된 모든 이미지와 텍스트를 가져옵니다.
+    }
 
     // 선택된 이미지와 더미 텍스트를 Oracle DB에 저장
     @PostMapping("/saveImageTextBatch")
