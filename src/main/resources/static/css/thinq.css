@@ -1,0 +1,37 @@
+body {
+    background-image: url('../images/4.jpeg')!important;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* 화면 전체 높이 사용 */
+    margin: 0;
+    /* 기본 여백 제거 */
+}
+
+.button {
+    position: absolute;
+    /* 절대 위치 지정 */
+    bottom: 5.5%;
+    /* 하단에서 20px 위 */
+    background-color: rgba(255, 255, 255, 0.5);
+    /* 투명 배경 */
+    border: none;
+    /* 기본 테두리 제거 */
+    padding: 10px 20px;
+    /* 패딩 설정 */
+    cursor: pointer;
+    /* 마우스 커서 변경 */
+    border-radius: 5px;
+    /* 모서리 둥글게 */
+    font-size: 12px;
+    /* 글자 크기 설정 */
+    left: 48.7%;
+
+}
+
+.button:hover {
+    background-color: rgba(61, 97, 255, 0.8);
+    /* 호버 시 색상 변화 */
+}
