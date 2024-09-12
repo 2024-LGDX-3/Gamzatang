@@ -1,16 +1,25 @@
 package com.lgedx.demo.controller;
 
+import com.lgedx.demo.DemoEntity.ImageTextData;
+import com.lgedx.demo.Repository.ImageTextDataRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MyController {
+
+    @Autowired
+    private ImageTextDataRepository repository;
 
     @GetMapping("/thinq")
     public String thinqPage() {
@@ -23,21 +32,7 @@ public class MyController {
     }
 
     @GetMapping("/diary")
-    public String diaryPage() {
-        return "diary";
-    }
-
-    @GetMapping("/standby")
-    public String sbPage() {
-        return "standby";
-    }
-
-   @GetMapping("/oshome")
-   public String oshomePage() {return "osHome";}
-
-
-    @GetMapping("/album") // 다른 경로로 수정됨
-    public String album(Model model) {
+    public String diaryPage(Model model) {
         // 이미지가 저장된 폴더 경로 (diary 폴더)
         String folderPath = "diary";
         File folder = new File(folderPath);
@@ -57,6 +52,34 @@ public class MyController {
 
         // 모델에 이미지 경로 목록 추가
         model.addAttribute("images", imagePaths);
-        return "album"; // album.html 템플릿 반환
+        return "diary";  // diary.html 템플릿 반환
+    }
+
+    @GetMapping("/standby")
+    public String sbPage() {
+        return "standby";  // standby.html로 이동
+    }
+
+    @GetMapping("/oshome")
+    public String oshomePage() {
+        return "osHome";  // osHome.html로 이동
+    }
+
+    // 선택된 이미지와 더미 텍스트를 Oracle DB에 저장
+    @PostMapping("/saveImageTextBatch")
+    @ResponseBody
+    public String saveImageTextBatch(@RequestBody List<Map<String, String>> items) {
+        for (Map<String, String> item : items) {
+            System.out.println("Received image URL: " + item.get("imageUrl"));
+            System.out.println("Received hashTag: " + item.get("hashTag"));
+            System.out.println("Received text: " + item.get("text"));
+
+            String imageUrl = item.get("imageUrl");
+            String hashTag = item.get("hashTag");
+            String text = item.get("text");  // 더미 텍스트
+            ImageTextData data = new ImageTextData(imageUrl, hashTag, text);
+            repository.save(data);
+        }
+        return "{\"status\":\"success\"}";
     }
 }
