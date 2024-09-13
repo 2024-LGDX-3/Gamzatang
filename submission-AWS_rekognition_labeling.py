@@ -283,7 +283,7 @@ if __name__ == "__main__":
 
 
 """""""""""""""""""""""""""""""""""""""""
-MUST DO : STOP AWS Rekognition Custom Label model
+MUST DO : Turn Off AWS Rekognition Custom Label model
 """""""""""""""""""""""""""""""""""""""""
 def stop_model(model_arn):
     print('Stopping model: ' + model_arn)
