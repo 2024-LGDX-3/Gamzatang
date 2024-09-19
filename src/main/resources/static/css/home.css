@@ -14,7 +14,7 @@ body {
     position: absolute;
     top: 6%;
     left: 5.3%;
-    width: 32%;  /* 이미지 크기와 동일하게 설정 */
+    width: 32%;
     height: 35%;
     overflow: hidden;
     border: 0.3vw solid white;
@@ -23,23 +23,15 @@ body {
 
 .slider-content {
     display: flex;
+    height: 100%;
     transition: transform 1s ease-in-out;
 }
 
-.slide {
-    width: 660px;  /* 이미지 크기와 동일하게 설정 */
-    height: 100%;  /* 슬라이드 전체 높이에 맞게 설정 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.slide img {
+.slider-content img {
     width: 100%;
     height: 100%;
-    object-fit: fill; /* 이미지를 슬라이드에 맞게 조정 */
+    object-fit: cover;
 }
-
 .fullscreen {
     position: fixed;
     top: 0;

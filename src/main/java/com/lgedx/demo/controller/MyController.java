@@ -52,6 +52,27 @@ public class MyController {
     @Autowired
     private ImageTextDataRepository imageTextDataRepository; // 리포지토리 주입
 
+    @PostMapping("/getSelectedImagesData")
+    @ResponseBody
+    public List<ImageTextData> getSelectedImagesData(@RequestBody List<String> selectedImageUrls) {
+        String baseUrl = "http://localhost:1524/demo/";
+
+        // 절대 경로를 상대 경로로 변환
+        List<String> relativeImageUrls = selectedImageUrls.stream()
+                .map(url -> url.replace(baseUrl, "")) // 절대 경로를 제거하여 상대 경로로 변환
+                .collect(Collectors.toList());
+
+        // 선택한 이미지 URL을 로그로 확인
+        System.out.println("Selected Images Relative URLs: " + relativeImageUrls);
+
+        // DB에서 선택한 이미지 URL과 일치하는 데이터 가져오기
+        List<ImageTextData> imageTextDataList = imageTextDataRepository.findByImageUrlIn(relativeImageUrls);
+
+        // 가져온 데이터 확인
+        System.out.println("DB에서 가져온 데이터: " + imageTextDataList);
+
+        return imageTextDataList; // JSON 형식으로 반환
+    }
     @GetMapping("/standby")
     public String sbPage(Model model) {
         try {
@@ -74,30 +95,10 @@ public class MyController {
             return "error"; // 오류 페이지로 이동
         }
     }
-    @PostMapping("/getSelectedImagesData")
-    @ResponseBody
-    public List<ImageTextData> getSelectedImagesData(@RequestBody List<String> selectedImageUrls) {
-        String baseUrl = "http://localhost:1524/demo/";
 
-        // 절대 경로를 상대 경로로 변환
-        List<String> relativeImageUrls = selectedImageUrls.stream()
-                .map(url -> url.replace(baseUrl, "")) // 절대 경로를 제거하여 상대 경로로 변환
-                .collect(Collectors.toList());
 
-        // 선택한 이미지 URL을 로그로 확인
-        System.out.println("Selected Images Relative URLs: " + relativeImageUrls);
-
-        // DB에서 선택한 이미지 URL과 일치하는 데이터 가져오기
-        List<ImageTextData> imageTextDataList = imageTextDataRepository.findByImageUrlIn(relativeImageUrls);
-
-        // 가져온 데이터 확인
-        System.out.println("DB에서 가져온 데이터: " + imageTextDataList);
-
-        return imageTextDataList; // JSON 형식으로 반환
-    }
-
-   @GetMapping("/oshome")
-   public String oshomePage() {return "osHome";}
+    @GetMapping("/oshome")
+    public String oshomePage() {return "osHome";}
 
 
 
