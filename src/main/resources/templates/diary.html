@@ -1,75 +1,93 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>앨범</title>
-    <link rel="stylesheet" href="css/diary.css"> <!-- 경로 확인 필요 -->
+    <link rel="stylesheet" href="css/diary.css">
 </head>
-
 <body>
-    <div class="album" id="album"></div>
-    <form action="standby">
-        <button type="button" class="upload-button" onclick="submitSelectedImages()">추억 생성하기</button>
-    </form>
+<div class="album" id="album"></div>
+<form id="imageForm">
+    <button type="button" class="upload-button" onclick="submitSelectedImages()">추억 저장하기</button>
+</form>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const albumContainer = document.getElementById('album');
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const albumContainer = document.getElementById('album');
+        let i = 1;
 
-            // 이미지 파일명 및 URL 설정
-            let i = 1; // 시작 번호
-            const loadImages = () => {
-                const imageUrl = `diary/${i}.jpg`; // 이미지 URL 설정
+        const loadImages = () => {
+            const imageUrl = `diary/${i}.jpg`; // 이미지 경로 설정
+            fetch(imageUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error("이미지 없음");
 
-                // 이미지가 존재하는지 확인하기 위해 fetch를 사용
-                fetch(imageUrl)
-                    .then(response => {
-                        if (!response.ok) throw new Error("Image not found");
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageUrl;
+                    imgElement.alt = `Album Image ${i}`;
 
-                        // 이미지 요소 생성
-                        const imgElement = document.createElement('img');
-                        imgElement.src = imageUrl;
-                        imgElement.alt = `Album Image ${i}`;
+                    const frameElement = document.createElement('div');
+                    frameElement.className = 'frame';
+                    frameElement.onclick = function () {
+                        this.classList.toggle('selected');
+                    };
 
-                        // 프레임 요소 생성
-                        const frameElement = document.createElement('div');
-                        frameElement.className = 'frame';
-                        frameElement.onclick = function() {
-                            this.classList.toggle('selected');
-                        };
+                    const checkmarkElement = document.createElement('div');
+                    checkmarkElement.className = 'checkmark';
+                    checkmarkElement.textContent = '✔';
 
-                        // 체크마크 요소 생성
-                        const checkmarkElement = document.createElement('div');
-                        checkmarkElement.className = 'checkmark';
-                        checkmarkElement.textContent = '✔';
+                    frameElement.appendChild(imgElement);
+                    frameElement.appendChild(checkmarkElement);
+                    albumContainer.appendChild(frameElement);
 
-                        // 요소들 추가
-                        frameElement.appendChild(imgElement);
-                        frameElement.appendChild(checkmarkElement);
-                        albumContainer.appendChild(frameElement);
+                    i++;
+                    loadImages(); // 다음 이미지 로드
+                })
+                .catch(error => {
+                    console.log("더 이상 이미지가 없습니다.");
+                });
+        };
 
-                        i++; // 다음 이미지로
-                        loadImages(); // 재귀 호출로 다음 이미지 로드
-                    })
-                    .catch(error => {
-                        console.log("No more images to load.");
-                    });
-            };
+        loadImages();
+    });
 
-            loadImages(); // 이미지 로드 시작
+    async function submitSelectedImages() {
+        const selectedItems = [];
+
+        const dummyText = "이것은 더미 텍스트입니다.";  // 더미 텍스트
+
+        for (const frame of document.querySelectorAll('.frame.selected')) {
+            const img = frame.querySelector('img');
+            selectedItems.push({
+                imageUrl: img.src,
+                hashTag: "#추억",
+                text: dummyText
+            });
+        }
+
+        // context path가 포함된 경로로 요청을 보냅니다.
+        const response = await fetch('/demo/saveImageTextBatch', {  // '/demo' 추가됨
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(selectedItems)
         });
 
-        function submitSelectedImages() {
-            const selectedImages = [];
-            document.querySelectorAll('.frame.selected img').forEach(img => {
-                selectedImages.push(img.src);
-            });
-            localStorage.setItem('selectedImages', JSON.stringify(selectedImages));
-            window.location.href = 'standby'; // 페이지 이동
+        if (!response.ok) {
+            console.error('Error:', response.statusText);
+            return;
         }
-    </script>
-</body>
 
+        const data = await response.json();
+        console.log('Data saved:', data);
+
+        if (data.status === 'success') {
+            window.location.href = '/demo/standby';  // standby 페이지로 이동 시에도 context path 포함
+        }
+    }
+
+</script>
+</body>
 </html>
