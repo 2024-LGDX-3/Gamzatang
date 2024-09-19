@@ -1,99 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pastel Photo Slider</title>
     <link rel="stylesheet" href="css/standby.css">
 </head>
-
 <body>
-    <form id="redirect-form" action="oshome" method="get">
-        <div class="slider-container">
-            <div class="slider-frame" id="slider-frame"></div>
+<form id="redirect-form" action="oshome" method="get">
+    <div class="slider-container">
+        <div class="slider-frame" id="slider-frame">
+            <div class="slider-content" id="slider-content"></div> <!-- 슬라이더 컨텐츠 -->
         </div>
-    </form>
+    </div>
+</form>
 
-    <script>
-        function getRandomPastelColor() {
-            const r = Math.floor(Math.random() * 127 + 127);
-            const g = Math.floor(Math.random() * 127 + 127);
-            const b = Math.floor(Math.random() * 127 + 127);
-            return `rgb(${r}, ${g}, ${b})`;0
+<script>
+    function getRandomPastelColor() {
+        const r = Math.floor(Math.random() * 127 + 127);
+        const g = Math.floor(Math.random() * 127 + 127);
+        const b = Math.floor(Math.random() * 127 + 127);
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const sliderContent = document.getElementById('slider-content'); // 슬라이더 컨텐츠 참조
+        const sliderFrame = document.getElementById('slider-frame');
+        const imageWidth = sliderFrame.clientWidth; // 슬라이드 프레임 너비
+        let currentIndex = 0;
+        const imageDisplayTime = 5000; // 5초 동안 이미지 표시
+        let slideInterval; // 슬라이드 간격을 제어하는 변수
+
+        // 선택한 이미지 경로를 서버에 보내기 (임시: 로컬 스토리지 사용)
+        const selectedImages = JSON.parse(localStorage.getItem('selectedImages') || '[]');
+
+        if (selectedImages.length === 0) {
+            console.log("No images selected.");
+            return;
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const sliderFrame = document.getElementById('slider-frame');
+        // 서버에서 DB에 저장된 이미지 데이터를 가져오기
+        fetch('/demo/getSelectedImagesData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(selectedImages)  // 선택된 이미지 URL을 서버로 전송
+        })
+            .then(response => response.json())
+            .then(images => {
+                if (images.length === 0) {
+                    console.log("No images found.");
+                    return;
+                }
 
-            // localStorage에서 선택된 이미지 가져오기
-            const selectedImages = JSON.parse(localStorage.getItem('selectedImages') || '[]');
+                // 서버에서 받아온 이미지 데이터를 슬라이더에 추가
+                images.forEach(imageData => {
+                    const slideContainer = document.createElement('div');
+                    slideContainer.className = 'slide';
+                    slideContainer.style.backgroundColor = getRandomPastelColor(); // 랜덤한 파스텔 색상
 
-            // 이미지가 없으면 메시지 표시
-            if (selectedImages.length === 0) {
-                const noImagesMessage = document.createElement('div');
-                noImagesMessage.textContent = '선택한 이미지가 없습니다.';
-                noImagesMessage.style.color = '#fff';
-                noImagesMessage.style.textAlign = 'center';
-                noImagesMessage.style.width = '100%';
-                noImagesMessage.style.fontSize = '24px';
-                noImagesMessage.style.marginTop = '20px';
-                sliderFrame.appendChild(noImagesMessage);
-                return;
-            }
+                    // 이미지 엘리먼트
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imageData.imageUrl; // DB에서 가져온 이미지 URL
+                    imgElement.style.width = "100%";
+                    imgElement.style.height = "70%";
+                    imgElement.style.objectFit = "cover"; // 이미지의 비율을 유지하며 프레임에 맞게 조정
 
-            // 슬라이드 항목 생성
-            selectedImages.forEach(imageUrl => {
-                const slideElement = document.createElement('div');
-                slideElement.className = 'slide';
-                slideElement.style.backgroundColor = getRandomPastelColor(); // 랜덤 색상 적용
+                    // 해시태그 엘리먼트
+                    const hashElement = document.createElement('p');
+                    hashElement.textContent = imageData.hashTag;
+                    hashElement.style.fontWeight = 'bold';  // 해시태그 강조
 
-                const imgElement = document.createElement('img');
-                imgElement.src = imageUrl;
-                imgElement.alt = 'Selected Photo';
+                    // 텍스트 엘리먼트
+                    const textElement = document.createElement('p');
+                    textElement.textContent = imageData.text; // DB에서 가져온 텍스트
 
-                const captionElement = document.createElement('p');
-                captionElement.textContent = '#추억 사진'; // 텍스트를 원하는 대로 변경 가능
+                    // 프레임에 요소 추가
+                    slideContainer.appendChild(imgElement);
+                    slideContainer.appendChild(hashElement);  // 해시태그 추가
+                    slideContainer.appendChild(textElement);  // 텍스트 추가
+                    sliderContent.appendChild(slideContainer);
+                });
 
-                slideElement.appendChild(imgElement);
-                slideElement.appendChild(captionElement);
-                sliderFrame.appendChild(slideElement);
-            });
+                const totalImages = images.length;
+                sliderContent.style.width = `${imageWidth * totalImages}px`;
 
-            // 복제된 슬라이드를 추가하여 무한 반복 효과를 구현
-            selectedImages.forEach(imageUrl => {
-                const slideElement = document.createElement('div');
-                slideElement.className = 'slide';
-                slideElement.style.backgroundColor = getRandomPastelColor(); // 랜덤 색상 적용
+                // 슬라이드 이동 함수
+                function showNextImage() {
+                    currentIndex++;
+                    if (currentIndex < totalImages) {
+                        sliderContent.style.transform = `translateX(${-currentIndex * imageWidth}px)`;
+                    } else {
+                        sliderContent.style.transform = `translateX(0px)`;
+                        currentIndex = 0;
+                    }
+                }
 
-                const imgElement = document.createElement('img');
-                imgElement.src = imageUrl;
-                imgElement.alt = 'Selected Photo';
+                // 슬라이드 시작
+                startSlider();
 
-                const captionElement = document.createElement('p');
-                captionElement.textContent = '#추억 사진'; // 텍스트를 원하는 대로 변경 가능
+                function startSlider() {
+                    slideInterval = setInterval(showNextImage, imageDisplayTime);
+                }
 
-                slideElement.appendChild(imgElement);
-                slideElement.appendChild(captionElement);
-                sliderFrame.appendChild(slideElement);
-            });
+                function stopSlider() {
+                    clearInterval(slideInterval);
+                }
 
-            function nextSlide() {
-                sliderFrame.style.animation = 'none';
-                sliderFrame.offsetHeight; // trigger reflow
-                sliderFrame.style.animation = 'slide 15s linear infinite';
-            }
+                sliderFrame.addEventListener('mouseenter', stopSlider); // 마우스 오버 시 슬라이드 멈추기
+                sliderFrame.addEventListener('mouseleave', startSlider); // 마우스 떠날 시 슬라이드 다시 시작
+            })
+            .catch(error => console.error('Error fetching images:', error));
+    });
 
-            function prevSlide() {
-                // 이전 슬라이드를 구현하려면 추가적인 논리가 필요합니다.
-            }
-        });
-
-        // 전체 페이지 클릭 시 form 제출
-        document.body.addEventListener('click', function () {
-            document.getElementById('redirect-form').submit();
-        });
-    </script>
+    // 페이지 클릭 시 osHome 페이지로 이동
+    document.body.addEventListener('click', function () {
+        document.getElementById('redirect-form').submit();
+    });
+</script>
 </body>
-
 </html>
