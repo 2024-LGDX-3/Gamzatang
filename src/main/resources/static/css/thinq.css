@@ -13,7 +13,7 @@ body {
 .button {
     position: absolute;
     /* 절대 위치 지정 */
-    bottom: 5.5%;
+    bottom: 9%;
     /* 하단에서 20px 위 */
     background-color: rgba(255, 255, 255, 0.5);
     /* 투명 배경 */
